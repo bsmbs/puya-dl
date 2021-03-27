@@ -6,7 +6,10 @@ from bs4 import BeautifulSoup
 import episodeFilter
 
 def req(query):
-    res = requests.get("https://nyaa.si/user/puyero?q="+query+"+"+args.quality, headers={'User-Agent': 'puya-dl/1.0'})
+    if args.all:
+        res = requests.get("https://nyaa.si/?q="+query, headers={'User-Agent': 'puya-dl/1.0'})
+    else:
+        res = requests.get("https://nyaa.si/user/puyero?q="+query+"+"+args.quality, headers={'User-Agent': 'puya-dl/1.0'})
     parsed = BeautifulSoup(res.content, 'html.parser')
 
     items = []
@@ -24,7 +27,7 @@ def req(query):
             title = links[1]['title'] # Title
         
         print(title)
-        p = re.compile(r'(\[PuyaSubs!\])\s(?P<title>.*)\s-\s(?P<episode>\d+)')
+        p = re.compile(r'(?P<group>\[.*\])\s(?P<title>.*)\s-\s(?P<episode>\d+)')
         m = p.search(title)
         if not m:
             print("No match")
@@ -88,6 +91,7 @@ parser.add_argument('-q', '--quality', dest="quality", help="Quality (usually on
 parser.add_argument('-e', '--episodes', dest="episodes", help="Specify episodes to download", required=False)
 parser.add_argument('--dryrun', action='store_true', dest="dryrun", help="Dry run (only for development)")
 parser.add_argument('--quiet', '--noconfirm', action='store_true', dest="noconfirm", help="Don't ask for confirmation")
+parser.add_argument('--all', action='store_true', dest="all", help="Search for all releases (not only puya) (experimental)")
 
 args = parser.parse_args()
 query = ' '.join(args.title)
