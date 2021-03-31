@@ -1,6 +1,7 @@
 import sys
-from main import req, list_titles, filter, download
+from puyadl.scraper import Scraper
 from PySide6.QtWidgets import *
+from types import SimpleNamespace
 
 class Form(QWidget):
     
@@ -46,7 +47,7 @@ class Form(QWidget):
         layout.addStretch(1) ######
         layout.addWidget(self.button)
 
-        self.button.clicked.connect(self.request)
+        self.button.clicked.connect(self.query)
 
     def checkboxEvent(self, state):
         if state == 0:
@@ -70,18 +71,23 @@ class Form(QWidget):
 
         retval = msg.exec_()
 
-    def request(self):
-        items = req(self.title.text(), False, self.cb.currentText())
-        titles = list_titles(items)
+    def query(self):
+        print("Fine")
+        
+        args = SimpleNamespace()
+        args.quality = self.cb.currentText()
+        args.episodes = self.eps.text() if self.epsCheckBox.isChecked() else None
+        args.all = False # to be implemented
 
-        if self.epsCheckBox.isChecked():
-            filtered = filter(items, titles[0], self.eps.text())
-        else:
-            filtered = filter(items, titles[0], False)
-        download(filtered, False)
+        scraper = Scraper(args)
+        scraper.request(self.title.text())
+        titles = scraper.list_titles()
         print(titles)
+        scraper.filter(titles[0])
+        scraper.downloadFirstItem()
+        scraper.download()
 
-if __name__ == '__main__':
+def initialize():
     app = QApplication(sys.argv)
     form = Form()
     form.show()
