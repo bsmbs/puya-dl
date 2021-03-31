@@ -24,8 +24,6 @@ class Form(QWidget):
         self.topLayout.addWidget(self.label)
         self.topLayout.addWidget(self.cb)
 
-        self.button = QPushButton("Download")
-
         self.eps = QLineEdit()
         self.eps.setPlaceholderText("Episodes")
         self.eps.setDisabled(True)
@@ -40,12 +38,17 @@ class Form(QWidget):
         self.epsGroup = QGroupBox()
         self.epsGroup.setLayout(self.epsLayout)
 
+        self.button = QPushButton("Search")
+
+        self.progress = QProgressBar()
+
         layout = QVBoxLayout(self)
         layout.addLayout(self.topLayout)
         layout.addWidget(self.epsGroup)
 
-        layout.addStretch(1) ######
+        layout.addStretch(1)
         layout.addWidget(self.button)
+        layout.addWidget(self.progress)
 
         self.button.clicked.connect(self.query)
 
@@ -71,21 +74,86 @@ class Form(QWidget):
 
         retval = msg.exec_()
 
+    def choiceDialog(self, titles):
+        dialog = QDialog()
+        dialog.resize(260, 260)
+        vbox = QVBoxLayout(dialog)
+
+        label = QLabel("Multiple titles have been found. Please select which one to download.")
+        btnGroup = QButtonGroup(vbox)
+
+        vbox.addWidget(label)
+
+        buttons = []
+
+        for i, title in enumerate(titles):
+            button = QRadioButton(title)
+            btnGroup.addButton(button)
+            btnGroup.setId(button, i)
+
+            vbox.addWidget(button)
+            buttons.append(button)
+
+        buttons[0].setChecked(True)
+
+        hbox = QHBoxLayout()
+        cancel = QPushButton("Cancel")
+        ok = QPushButton("Confirm")
+
+        hbox.addWidget(cancel)
+        hbox.addWidget(ok)
+
+        vbox.addStretch(1)
+        vbox.addLayout(hbox)
+        
+        cancel.clicked.connect(lambda: dialog.reject())
+        ok.clicked.connect(lambda: self.dialogClose(dialog, btnGroup))
+        
+        dialog.setWindowTitle("puya-dl")
+        dialog.setModal(True)
+
+        return dialog
+
+    def dialogClose(self, dialog, group):
+        dialog.done(group.checkedId()+1) # +1 because 0 means no choice at all
+
     def query(self):
-        print("Fine")
+        self.progress.setValue(0)
         
         args = SimpleNamespace()
-        args.quality = self.cb.currentText()
+        quality = self.cb.currentText()
+        args.quality = quality if quality != "Unspecified" else ""
         args.episodes = self.eps.text() if self.epsCheckBox.isChecked() else None
         args.all = False # to be implemented
 
+        self.progressTo(0, 25)
         scraper = Scraper(args)
-        scraper.request(self.title.text())
+        scraper.request(self.title.text()) # TODO exception handling
+        self.progressTo(25, 50)
+
         titles = scraper.list_titles()
-        print(titles)
-        scraper.filter(titles[0])
+        if len(titles) > 1:
+            choice = self.choiceDialog(titles)
+            result = choice.exec_()
+            if result == 0:
+                print("No choice")
+                self.progress.setValue(0)
+                return
+            else:
+                index = result - 1
+        else:
+            index = 0
+
+        self.progressTo(50, 100)
+        scraper.filter(titles[index])
         scraper.downloadFirstItem()
         scraper.download()
+
+    def progressTo(self, start, to):
+        completed = start
+        while completed < to:
+            completed += 0.0001
+            self.progress.setValue(completed)
 
 def initialize():
     app = QApplication(sys.argv)
