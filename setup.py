@@ -8,7 +8,7 @@ setuptools.setup(
     version="1.0.0",
     author="pizza61",
     author_email="2006mappa@protonmail.com",
-    description="Short Python script for batch downloading PuyaSubs releases",
+    description="Short Python script and GUI for batch downloading PuyaSubs releases",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/pizza61/puya-dl",

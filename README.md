@@ -1,22 +1,34 @@
 # puya-dl
 
-Short Python script for batch downloading PuyaSubs releases
+Short Python script (with GUI) for batch downloading PuyaSubs releases
 
-Doesn't work with shows longer than 75 episodes because I'm too lazy to implement it properly. Should work tho
+Doesn't work with shows longer than 75 episodes because I'm too lazy to implement it properly.
 
 ## Requirements
-* Python... a new version I guess
+* Python 3... a new version I guess
 * `xdg-open` (doesn't work on Windows for now)
 * a BitTorrent client
 
 ## Install
-Just clone this repository, do `pip install -r requirements.txt`. You can do this venv thing if you want.
+```sh
+> pip install puyadl
+```
+
+or just clone this repository and do `python setup.py install`
 
 ## Usage
-`python main.py "search query"`
+### GUI
+The GUI uses Qt 6, so you have to have it installed in your system.
+
+The command without any arguments fires up the GUI. If you want to see CLI help, use -h.
+
+`python -m puya-dl`
+
+### CLI
+`python -m puyadl "search query"`
 
 ```
-usage: main.py [-h] [-q QUALITY] [-e EPISODES] [--dryrun] [--quiet] title [title ...]
+usage: puyadl [-h] [-q QUALITY] [-e EPISODES] [--dryrun] [--quiet] [--all] title [title ...]
 
 puya.moe batch download tool
 
@@ -31,6 +43,7 @@ optional arguments:
                         Specify episodes to download
   --dryrun              Dry run (only for development)
   --quiet, --noconfirm  Don't ask for confirmation
+  --all                 Search for all releases (not only puya) (experimental)
 ```
 
 Default quality is 1080p. If you want to specify a different one, use -q, for example -q 720p.
