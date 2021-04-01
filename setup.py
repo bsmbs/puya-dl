@@ -22,5 +22,10 @@ setuptools.setup(
         "Environment :: X11 Applications :: Qt"
     ],
     packages=['puyadl'],
-    python_requires=">=3.6",
+    install_requires=[
+        'requests>=2.25.1',
+        'beautifulsoup4>=4.9.3',
+        'PySide6>=6.0.2'
+    ],
+    python_requires=">=3.6"
 )
