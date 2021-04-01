@@ -11,7 +11,7 @@ Doesn't work with shows longer than 75 episodes because I'm too lazy to implemen
 
 ## Install
 ```sh
-> pip install puyadl
+> pip install puya-dl
 ```
 
 or just clone this repository and do `python setup.py install`
@@ -22,7 +22,7 @@ The GUI uses Qt 6, so you have to have it installed in your system.
 
 The command without any arguments fires up the GUI. If you want to see CLI help, use -h.
 
-`python -m puya-dl`
+`python -m puyadl`
 
 ### CLI
 `python -m puyadl "search query"`
