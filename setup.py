@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="puya-dl", # Replace with your own username
-    version="1.1.0",
+    version="1.1.1",
     author="pizza61",
     author_email="2006mappa@protonmail.com",
     description="Short Python script and GUI for batch downloading PuyaSubs releases",
