@@ -3,7 +3,7 @@ from PySide6.QtWidgets import *
 from types import SimpleNamespace
 
 from puyadl.scraper import Scraper
-from puyadl.dialog import showSimpleDialog
+from puyadl.dialog import showSimpleDialog, showErrorDialog
 
 
 class Form(QWidget):
@@ -112,6 +112,10 @@ class Form(QWidget):
         dialog.done(group.checkedId()+1) # +1 because 0 means no choice at all
 
     def query(self):
+        if len(self.title.text()) == 0:
+            showErrorDialog("No query specified")
+            return
+
         self.progress.setValue(0)
         
         args = SimpleNamespace()
@@ -124,6 +128,12 @@ class Form(QWidget):
         self.progressTo(0, 25)
         scraper = Scraper(args)
         scraper.request(self.title.text()) # TODO exception handling
+
+        if len(scraper.items) == 0:
+            showErrorDialog("No results found")
+            self.cancel()
+            return
+
         self.progress.setFormat("Parsing results...")
         self.progressTo(25, 50)
 

@@ -17,13 +17,13 @@ class Scraper:
             res = requests.get("https://nyaa.si/user/puyero?q="+query+"+"+self.args.quality, headers={'User-Agent': 'puya-dl/1.0'})
         parsed = BeautifulSoup(res.content, 'html.parser')
 
-        items = []
+        self.items = []
 
         results = parsed.find_all('tr') # Find every row
         if len(results) == 0:
             print("No results found.")
-            exit()
-        
+            return
+                    
         for result in results[1:]:
             links = result.select('td a')
             if "comments" in links[1]['href']:
@@ -42,9 +42,8 @@ class Scraper:
                 "episode": m.group('episode'),
                 "magnet": links[-1]['href']
             }
-            items.append(ep)
+            self.items.append(ep)
 
-        self.items = items
         # return items
 
     def list_titles(self):
