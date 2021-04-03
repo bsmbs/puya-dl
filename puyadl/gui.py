@@ -11,7 +11,7 @@ class Form(QWidget):
         self.resize(330, 330)
 
         # TopLayout (Title LineEdit + Quality ComboBox)
-        self.title = QLineEdit("Jujutsu Kaisen")
+        self.title = QLineEdit()
 
         self.label = QLabel("Quality:")
 
@@ -38,9 +38,10 @@ class Form(QWidget):
         self.epsGroup = QGroupBox()
         self.epsGroup.setLayout(self.epsLayout)
 
-        self.button = QPushButton("Search")
+        self.button = QPushButton("Download")
 
         self.progress = QProgressBar()
+        self.progress.setTextVisible(True)
 
         layout = QVBoxLayout(self)
         layout.addLayout(self.topLayout)
@@ -126,9 +127,11 @@ class Form(QWidget):
         args.episodes = self.eps.text() if self.epsCheckBox.isChecked() else None
         args.all = False # to be implemented
 
+        self.progress.setFormat("Fetching results from nyaa...")
         self.progressTo(0, 25)
         scraper = Scraper(args)
         scraper.request(self.title.text()) # TODO exception handling
+        self.progress.setFormat("Parsing results...")
         self.progressTo(25, 50)
 
         titles = scraper.list_titles()
@@ -144,10 +147,12 @@ class Form(QWidget):
         else:
             index = 0
 
+        self.progress.setFormat("Opening magnet links...")
         self.progressTo(50, 100)
         scraper.filter(titles[index])
         scraper.downloadFirstItem()
         scraper.download()
+        self.progress.setFormat("Your BitTorrent client should open.")
 
     def progressTo(self, start, to):
         completed = start
