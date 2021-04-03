@@ -1,7 +1,10 @@
 import sys
-from puyadl.scraper import Scraper
 from PySide6.QtWidgets import *
 from types import SimpleNamespace
+
+from puyadl.scraper import Scraper
+from puyadl.dialog import showSimpleDialog
+
 
 class Form(QWidget):
     
@@ -141,6 +144,7 @@ class Form(QWidget):
             if result == 0:
                 print("No choice")
                 self.progress.setValue(0)
+                self.cancel()
                 return
             else:
                 index = result - 1
@@ -148,11 +152,17 @@ class Form(QWidget):
             index = 0
 
         self.progress.setFormat("Opening magnet links...")
-        self.progressTo(50, 100)
         scraper.filter(titles[index])
         scraper.downloadFirstItem()
-        scraper.download()
-        self.progress.setFormat("Your BitTorrent client should open.")
+        if showSimpleDialog("Your BitTorrent client should open with the first file. Hit OK to continue.") == QMessageBox.Ok:
+            self.progressTo(50, 100)
+            scraper.download()
+            self.progress.setFormat("Your BitTorrent client should open.")
+        else:
+            self.cancel()
+
+    def cancel(self):
+        self.progress.setValue(0)
 
     def progressTo(self, start, to):
         completed = start
