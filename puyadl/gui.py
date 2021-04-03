@@ -34,12 +34,19 @@ class Form(QWidget):
         self.epsCheckBox = QCheckBox("Specify episodes to download")
         self.epsCheckBox.stateChanged.connect(self.checkboxEvent)
 
+        self.confirmCheckbox = QCheckBox("Don't ask for confirmation")
+
+        self.epsGroupLayout = QVBoxLayout()
+
         self.epsLayout = QHBoxLayout()
         self.epsLayout.addWidget(self.epsCheckBox)
         self.epsLayout.addWidget(self.eps)
 
+        self.epsGroupLayout.addLayout(self.epsLayout)
+        self.epsGroupLayout.addWidget(self.confirmCheckbox)
+
         self.epsGroup = QGroupBox()
-        self.epsGroup.setLayout(self.epsLayout)
+        self.epsGroup.setLayout(self.epsGroupLayout)
 
         self.button = QPushButton("Download")
 
@@ -154,7 +161,7 @@ class Form(QWidget):
         self.progress.setFormat("Opening magnet links...")
         scraper.filter(titles[index])
         scraper.downloadFirstItem()
-        if showSimpleDialog("Your BitTorrent client should open with the first file. Hit OK to continue.") == QMessageBox.Ok:
+        if self.confirmCheckbox.isChecked() or showSimpleDialog("Your BitTorrent client should open with the first file. Hit OK to continue.") == QMessageBox.Ok:
             self.progressTo(50, 100)
             scraper.download()
             self.progress.setFormat("Your BitTorrent client should open.")
@@ -162,6 +169,7 @@ class Form(QWidget):
             self.cancel()
 
     def cancel(self):
+        self.progress.setFormat("Ready")
         self.progress.setValue(0)
 
     def progressTo(self, start, to):
