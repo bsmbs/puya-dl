@@ -11,7 +11,7 @@ class Form(QWidget):
     def __init__(self, parent=None):
         super(Form, self).__init__(parent)
         self.setWindowTitle("puya-dl")
-        self.resize(330, 330)
+        self.resize(440, 210)
 
         # TopLayout (Title LineEdit + Quality ComboBox)
         self.title = QLineEdit()
