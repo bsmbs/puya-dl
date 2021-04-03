@@ -20,7 +20,6 @@ class Form(QWidget):
 
         self.cb = QComboBox()
         self.cb.addItems(["1080p", "720p", "Unspecified"])
-        self.cb.currentIndexChanged.connect(self.change)
 
         self.topLayout = QHBoxLayout()
         self.topLayout.addWidget(self.title)
@@ -68,22 +67,6 @@ class Form(QWidget):
             self.eps.setDisabled(True)
         else:
             self.eps.setDisabled(False)
-
-    def change(self, i):
-        print("Current index is", self.cb.currentText())
-
-    def showdialog(self):
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Information)
-        
-        msg.setText("This is a message box")
-        msg.setInformativeText("This is additional information")
-        msg.setWindowTitle("MessageBox demo")
-        msg.setDetailedText("The details are as follows:")
-        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
-        # msg.buttonClicked.connect(msgbtn)
-
-        retval = msg.exec_()
 
     def choiceDialog(self, titles):
         dialog = QDialog()
