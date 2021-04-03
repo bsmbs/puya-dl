@@ -1,11 +1,12 @@
 # puya-dl
 
-Short Python script (with GUI) for batch downloading PuyaSubs releases
+Simple app written in Python for batch downloading PuyaSubs releases.
 
 Doesn't work with shows longer than 75 episodes because I'm too lazy to implement it properly.
 
 ## Requirements
 * Python 3... a new version I guess
+* Qt 6
 * `xdg-open` (doesn't work on Windows for now)
 * a BitTorrent client
 
@@ -18,14 +19,15 @@ or just clone this repository and do `python setup.py install`
 
 ## Usage
 ### GUI
-The GUI uses Qt 6, so you have to have it installed in your system.
-
 The command without any arguments fires up the GUI. If you want to see CLI help, use -h.
 
-`python -m puyadl`
-
+```sh
+> python -m puyadl
+```
 ### CLI
-`python -m puyadl "search query"`
+```sh
+> python -m puyadl "search query"
+```
 
 ```
 usage: puyadl [-h] [-q QUALITY] [-e EPISODES] [--dryrun] [--quiet] [--all] title [title ...]
