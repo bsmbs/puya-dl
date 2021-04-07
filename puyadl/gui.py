@@ -11,7 +11,24 @@ class Form(QWidget):
     def __init__(self, parent=None):
         super(Form, self).__init__(parent)
         self.setWindowTitle("puya-dl")
-        self.resize(440, 210)
+        self.resize(440, 330)
+
+        self.mode = QGroupBox()
+        mode1 = QRadioButton("PuyaSubs")
+        mode1.setChecked(True)
+        mode2 = QRadioButton("All")
+
+        modeLayout = QHBoxLayout()
+        modeLayout.addWidget(mode1)
+        modeLayout.addWidget(mode2)
+
+        self.mode.setLayout(modeLayout)
+        mode1.toggled.connect(self.modeChange)
+
+        self.warningLabel = QLabel("It's recommended to specify the group name in the search query in this mode.")
+        self.warningLabel.setStyleSheet("background-color: #263b45; color: white; border: 2px solid #3daee9; padding: 5px; border-radius: 3px;")
+        self.warningLabel.setWordWrap(True)
+        self.warningLabel.hide()
 
         # TopLayout (Title LineEdit + Quality ComboBox)
         self.title = QLineEdit()
@@ -53,6 +70,8 @@ class Form(QWidget):
         self.progress.setTextVisible(True)
 
         layout = QVBoxLayout(self)
+        layout.addWidget(self.mode)
+        layout.addWidget(self.warningLabel)
         layout.addLayout(self.topLayout)
         layout.addWidget(self.epsGroup)
 
@@ -61,6 +80,12 @@ class Form(QWidget):
         layout.addWidget(self.progress)
 
         self.button.clicked.connect(self.query)
+
+    def modeChange(self, state):
+        self.puya = state
+        self.label.setVisible(state)
+        self.cb.setVisible(state)
+        self.warningLabel.setVisible(not state)
 
     def checkboxEvent(self, state):
         if state == 0:
@@ -122,7 +147,7 @@ class Form(QWidget):
         quality = self.cb.currentText()
         args.quality = quality if quality != "Unspecified" else ""
         args.episodes = self.eps.text() if self.epsCheckBox.isChecked() else None
-        args.all = False # to be implemented
+        args.all = not self.puya
 
         self.progress.setFormat("Fetching results from nyaa...")
         self.progressTo(0, 25)
