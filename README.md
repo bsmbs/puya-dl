@@ -1,6 +1,6 @@
 # puya-dl
 
-Simple app written in Python for batch downloading PuyaSubs releases.
+Simple app written in Python for batch downloading PuyaSubs releases. It includes an 'All releases' option so you can use it for HorribleSubs as well.
 
 Doesn't work with shows longer than 75 episodes because I'm too lazy to implement it properly.
 

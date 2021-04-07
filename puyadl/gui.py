@@ -25,7 +25,7 @@ class Form(QWidget):
         self.mode.setLayout(modeLayout)
         mode1.toggled.connect(self.modeChange)
 
-        self.warningLabel = QLabel("It's recommended to specify the group name in the search query in this mode.")
+        self.warningLabel = QLabel("It's recommended to specify the group name and quality in the search query in this mode.")
         self.warningLabel.setStyleSheet("background-color: #263b45; color: white; border: 2px solid #3daee9; padding: 5px; border-radius: 3px;")
         self.warningLabel.setWordWrap(True)
         self.warningLabel.hide()
