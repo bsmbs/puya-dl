@@ -7,7 +7,6 @@ Doesn't work with shows longer than 75 episodes because I'm too lazy to implemen
 ## Requirements
 * Python 3... a new version I guess
 * Qt 6
-* `xdg-open` (doesn't work on Windows for now)
 * a BitTorrent client
 
 ## Install

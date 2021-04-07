@@ -1,9 +1,19 @@
 from puyadl.episode_parser import parseEpisodeFilter
 import argparse
+import sys
+import os
 import subprocess
 import re
 import requests
 from bs4 import BeautifulSoup
+
+def multiplatformOpen(destination):
+    if sys.platform == "win32" or sys.platform == "cygwin":
+        os.startfile(destination)
+    elif sys.platform == "darwin":
+        subprocess.run(['open', destination], stderr=subprocess.DEVNULL)
+    else:
+        subprocess.run(['xdg-open', destination], stderr=subprocess.DEVNULL)
 
 class Scraper:
 
@@ -75,8 +85,8 @@ class Scraper:
         self.items = filtered
     
     def downloadFirstItem(self):
-        subprocess.run(['xdg-open', self.items[-1]['magnet']], stderr=subprocess.DEVNULL)
+        multiplatformOpen(self.items[-1]['magnet'])
 
     def download(self):
         for x in self.items[::-1][1:]:
-            subprocess.run(['xdg-open', x['magnet']], stderr=subprocess.DEVNULL)
+            multiplatformOpen(x['magnet'])
