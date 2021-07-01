@@ -12,7 +12,8 @@ class Form(QWidget):
         super(Form, self).__init__(parent)
         self.setWindowTitle("puya-dl")
         self.resize(440, 330)
-
+        
+        self.puya = True
         self.mode = QGroupBox()
         mode1 = QRadioButton("PuyaSubs")
         mode1.setChecked(True)
